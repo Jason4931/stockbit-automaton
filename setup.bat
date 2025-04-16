@@ -1,6 +1,15 @@
 @echo off
 setlocal
 
+:: Check if Node.js is installed
+where node > NUL 2>&1
+if errorlevel 1 (
+    echo Node.js is not installed.
+    echo Installing Node.js...
+    start https://nodejs.org/dist/v22.14.0/node-v22.14.0-x64.msi
+    exit /b
+)
+
 :: Set working directory to the folder of this script
 set "workdir=%~dp0"
 set /p interval=Enter interval in minutes: 
