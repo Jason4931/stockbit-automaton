@@ -19,6 +19,7 @@ test('Beli Sore TRIAL', async ({ browser }) => {
   const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
   if (await logoutBtn.isVisible({ timeout: 5000 })) {
     execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
+    return;
   }
   const filterLabel = page.locator('label:has-text("Beli Sore TRIAL")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
@@ -77,6 +78,7 @@ test('BELI PAGI TRIAL', async ({ browser }) => {
   const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
   if (await logoutBtn.isVisible({ timeout: 5000 })) {
     execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
+    return;
   }
   const filterLabel = page.locator('label:has-text("BELI PAGI TRIAL")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
@@ -135,6 +137,7 @@ test('GABUNGAN PAGI SORE', async ({ browser }) => {
   const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
   if (await logoutBtn.isVisible({ timeout: 5000 })) {
     execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
+    return;
   }
   const filterLabel = page.locator('label:has-text("GABUNGAN PAGI SORE")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
@@ -193,6 +196,7 @@ test('BELI PAGI VOL BREAKOUT', async ({ browser }) => {
   const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
   if (await logoutBtn.isVisible({ timeout: 5000 })) {
     execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
+    return;
   }
   const filterLabel = page.locator('label:has-text("BELI PAGI + VOL BREAKOUT")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
@@ -251,6 +255,7 @@ test('High Volume Breakout', async ({ browser }) => {
   const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
   if (await logoutBtn.isVisible({ timeout: 5000 })) {
     execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
+    return;
   }
   const filterLabel = page.locator('label:has-text("High Volume Breakout")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
