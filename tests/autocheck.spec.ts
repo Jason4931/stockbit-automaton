@@ -38,6 +38,8 @@ test('Beli Sore TRIAL', async ({ browser }) => {
       data.BeliSoreTRIAL = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.BeliSoreTRIAL} Equities for Beli Sore TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -56,12 +58,16 @@ test('Beli Sore TRIAL', async ({ browser }) => {
         data.BeliSoreTRIAL = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.BeliSoreTRIAL} Equities for Beli Sore TRIAL`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.BeliSoreTRIAL = 0;
       sendNotification("Stockbit Screener", `Found ${data.BeliSoreTRIAL} Equities for Beli Sore TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
@@ -97,6 +103,8 @@ test('BELI PAGI TRIAL', async ({ browser }) => {
       data.BELIPAGITRIAL = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGITRIAL} Equities for BELI PAGI TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -115,12 +123,16 @@ test('BELI PAGI TRIAL', async ({ browser }) => {
         data.BELIPAGITRIAL = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.BELIPAGITRIAL} Equities for BELI PAGI TRIAL`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.BELIPAGITRIAL = 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGITRIAL} Equities for BELI PAGI TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
@@ -156,6 +168,8 @@ test('GABUNGAN PAGI SORE', async ({ browser }) => {
       data.GABUNGANPAGISORE = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.GABUNGANPAGISORE} Equities for GABUNGAN PAGI SORE`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -174,12 +188,16 @@ test('GABUNGAN PAGI SORE', async ({ browser }) => {
         data.GABUNGANPAGISORE = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.GABUNGANPAGISORE} Equities for GABUNGAN PAGI SORE`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.GABUNGANPAGISORE = 0;
       sendNotification("Stockbit Screener", `Found ${data.GABUNGANPAGISORE} Equities for GABUNGAN PAGI SORE`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
@@ -215,6 +233,8 @@ test('BELI PAGI VOL BREAKOUT', async ({ browser }) => {
       data.BELIPAGIVOLBREAKOUT = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGIVOLBREAKOUT} Equities for BELI PAGI + VOL BREAKOUT`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -233,12 +253,16 @@ test('BELI PAGI VOL BREAKOUT', async ({ browser }) => {
         data.BELIPAGIVOLBREAKOUT = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.BELIPAGIVOLBREAKOUT} Equities for BELI PAGI + VOL BREAKOUT`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.BELIPAGIVOLBREAKOUT = 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGIVOLBREAKOUT} Equities for BELI PAGI + VOL BREAKOUT`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
@@ -274,6 +298,8 @@ test('High Volume Breakout', async ({ browser }) => {
       data.HighVolumeBreakout = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.HighVolumeBreakout} Equities for High Volume Breakout`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -292,12 +318,16 @@ test('High Volume Breakout', async ({ browser }) => {
         data.HighVolumeBreakout = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.HighVolumeBreakout} Equities for High Volume Breakout`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.HighVolumeBreakout = 0;
       sendNotification("Stockbit Screener", `Found ${data.HighVolumeBreakout} Equities for High Volume Breakout`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
