@@ -21,7 +21,7 @@ set runfile=%workdir%run_playwright.bat
 (
     echo @echo off
     echo cd /d "%workdir%"
-    echo npx playwright test ^> NUL 2^>^&1
+    echo call npx playwright test ^> NUL 2^>^&1
     echo rd /s /q "%workdir%test-results"
     echo exit
 ) > "%runfile%"

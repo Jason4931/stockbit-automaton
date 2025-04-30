@@ -1,26 +1,76 @@
+const { chromium } = require('playwright');
+const path = require('path');
 import { test, expect } from '@playwright/test';
 import { BeliSoreTRIAL, BELIPAGITRIAL, GABUNGANPAGISORE, BELIPAGIVOLBREAKOUT, HighVolumeBreakout } from '../count.json';
 import { sendNotification } from '../notification';
-import { execSync } from 'child_process';
-import 'dotenv/config';
 import fs from 'fs';
+import { isContext } from 'vm';
 const rawData = fs.readFileSync("./count.json", 'utf-8');
 const data = JSON.parse(rawData);
+let context;
+
+test.use({ baseURL: 'https://stockbit.com' });
+test.beforeEach(async () => {
+  const extensionPath = 
+    'C:/Users/Jason/AppData/Local/Google/Chrome/User Data/Profile 4/' +
+    'Extensions/hlifkpholllijblknnmbfagnkjneagid/0.3.6_0';
+  const manifestFile = path.join(extensionPath, 'manifest.json');
+  if (!fs.existsSync(manifestFile)) {
+    throw new Error(`🛑 Cannot find manifest at ${manifestFile}`);
+  }
+  context = await chromium.launchPersistentContext('', {
+    headless: false,
+    args: [
+      `--disable-extensions-except=${extensionPath}`,
+      `--load-extension=${extensionPath}`,
+      // '--window-size=1,1',
+      // '--start-maximized',
+      // '--disable-infobars',
+      // '--no-sandbox',
+      // '--disable-dev-shm-usage',
+      // '--disable-gpu',
+      // '--mute-audio',
+      // '--hide-scrollbars',
+      // '--disable-blink-features=AutomationControlled',
+      // '--window-position=-32000,-32000',
+    ],
+    // viewport: { width: 1, height: 1 },
+    ignoreDefaultArgs: ["--enable-automation"],
+  });
+});
 
 test('Beli Sore TRIAL', async ({ browser }) => {
-  const context = await browser.newContext({
-    storageState: "./auth.json"
-  })
   const page = await context.newPage();
-  const ctxt = page.context();
-  ctxt.storageState();
-  await page.goto('https://stockbit.com/screener', { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(5000);
-  const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
-  if (await logoutBtn.isVisible({ timeout: 5000 })) {
-    execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
-    return;
+  await page.goto('chrome-extension://hlifkpholllijblknnmbfagnkjneagid/popup/popup.html');
+  await page.waitForTimeout(1000);
+  await page.goto('https://stockbit.com/login', { waitUntil: 'domcontentloaded', timeout: 10000 });
+  await page.locator('#username').fill("soegi");
+  await page.locator('#password').fill("Marvel2009");
+  await page.waitForTimeout(2000);
+  await page.locator('#email-login-button').click();
+  const continueBtn = page.locator('#email-login-button');
+  while (true) {
+    const isEnabled = await continueBtn.isEnabled();
+    if (isEnabled) {
+      await continueBtn.click();
+      await page.waitForTimeout(1000);
+      console.log('click')
+      const isVisible = await continueBtn.isVisible();
+      if (!isVisible) {
+        console.log('break')
+        break;
+      }
+    } else {
+      await page.waitForTimeout(1000);
+    }
   }
+  await page.waitForTimeout(1000);
+  try {
+    await page.locator('#modalnewavatar-button-skip').click();
+  } catch (e) {
+  }
+  await page.locator('#stockbit-header-web > div:nth-child(1) > div:nth-child(2) > div > div.sc-b2b86138-1.iTWDdJ > div:nth-child(8) > a').click();
+
   const filterLabel = page.locator('label:has-text("Beli Sore TRIAL")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
   await filterLabel.click();
@@ -38,6 +88,8 @@ test('Beli Sore TRIAL', async ({ browser }) => {
       data.BeliSoreTRIAL = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.BeliSoreTRIAL} Equities for Beli Sore TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -56,30 +108,52 @@ test('Beli Sore TRIAL', async ({ browser }) => {
         data.BeliSoreTRIAL = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.BeliSoreTRIAL} Equities for Beli Sore TRIAL`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.BeliSoreTRIAL = 0;
       sendNotification("Stockbit Screener", `Found ${data.BeliSoreTRIAL} Equities for Beli Sore TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BeliSoreTRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
 
 test('BELI PAGI TRIAL', async ({ browser }) => {
-  const context = await browser.newContext({
-    storageState: "./auth.json"
-  })
   const page = await context.newPage();
-  const ctxt = page.context();
-  ctxt.storageState();
-  await page.goto('https://stockbit.com/screener', { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(5000);
-  const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
-  if (await logoutBtn.isVisible({ timeout: 5000 })) {
-    execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
-    return;
+  await page.goto('chrome-extension://hlifkpholllijblknnmbfagnkjneagid/popup/popup.html');
+  await page.waitForTimeout(1000);
+  await page.goto('https://stockbit.com/login', { waitUntil: 'domcontentloaded', timeout: 10000 });
+  await page.locator('#username').fill("soegi");
+  await page.locator('#password').fill("Marvel2009");
+  await page.waitForTimeout(2000);
+  await page.locator('#email-login-button').click();
+  const continueBtn = page.locator('#email-login-button');
+  while (true) {
+    const isEnabled = await continueBtn.isEnabled();
+    if (isEnabled) {
+      await continueBtn.click();
+      await page.waitForTimeout(1000);
+      console.log('click')
+      const isVisible = await continueBtn.isVisible();
+      if (!isVisible) {
+        console.log('break')
+        break;
+      }
+    } else {
+      await page.waitForTimeout(1000);
+    }
   }
+  await page.waitForTimeout(1000);
+  try {
+    await page.locator('#modalnewavatar-button-skip').click();
+  } catch (e) {
+  }
+  await page.locator('#stockbit-header-web > div:nth-child(1) > div:nth-child(2) > div > div.sc-b2b86138-1.iTWDdJ > div:nth-child(8) > a').click();
+
   const filterLabel = page.locator('label:has-text("BELI PAGI TRIAL")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
   await filterLabel.click();
@@ -97,6 +171,8 @@ test('BELI PAGI TRIAL', async ({ browser }) => {
       data.BELIPAGITRIAL = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGITRIAL} Equities for BELI PAGI TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BELIPAGITRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -115,30 +191,52 @@ test('BELI PAGI TRIAL', async ({ browser }) => {
         data.BELIPAGITRIAL = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.BELIPAGITRIAL} Equities for BELI PAGI TRIAL`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BELIPAGITRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.BELIPAGITRIAL = 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGITRIAL} Equities for BELI PAGI TRIAL`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BELIPAGITRIAL-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
 
 test('GABUNGAN PAGI SORE', async ({ browser }) => {
-  const context = await browser.newContext({
-    storageState: "./auth.json"
-  })
   const page = await context.newPage();
-  const ctxt = page.context();
-  ctxt.storageState();
-  await page.goto('https://stockbit.com/screener', { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(5000);
-  const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
-  if (await logoutBtn.isVisible({ timeout: 5000 })) {
-    execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
-    return;
+  await page.goto('chrome-extension://hlifkpholllijblknnmbfagnkjneagid/popup/popup.html');
+  await page.waitForTimeout(1000);
+  await page.goto('https://stockbit.com/login', { waitUntil: 'domcontentloaded', timeout: 10000 });
+  await page.locator('#username').fill("soegi");
+  await page.locator('#password').fill("Marvel2009");
+  await page.waitForTimeout(2000);
+  await page.locator('#email-login-button').click();
+  const continueBtn = page.locator('#email-login-button');
+  while (true) {
+    const isEnabled = await continueBtn.isEnabled();
+    if (isEnabled) {
+      await continueBtn.click();
+      await page.waitForTimeout(1000);
+      console.log('click')
+      const isVisible = await continueBtn.isVisible();
+      if (!isVisible) {
+        console.log('break')
+        break;
+      }
+    } else {
+      await page.waitForTimeout(1000);
+    }
   }
+  await page.waitForTimeout(1000);
+  try {
+    await page.locator('#modalnewavatar-button-skip').click();
+  } catch (e) {
+  }
+  await page.locator('#stockbit-header-web > div:nth-child(1) > div:nth-child(2) > div > div.sc-b2b86138-1.iTWDdJ > div:nth-child(8) > a').click();
+
   const filterLabel = page.locator('label:has-text("GABUNGAN PAGI SORE")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
   await filterLabel.click();
@@ -156,6 +254,8 @@ test('GABUNGAN PAGI SORE', async ({ browser }) => {
       data.GABUNGANPAGISORE = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.GABUNGANPAGISORE} Equities for GABUNGAN PAGI SORE`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/GABUNGANPAGISORE-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -174,30 +274,52 @@ test('GABUNGAN PAGI SORE', async ({ browser }) => {
         data.GABUNGANPAGISORE = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.GABUNGANPAGISORE} Equities for GABUNGAN PAGI SORE`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/GABUNGANPAGISORE-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.GABUNGANPAGISORE = 0;
       sendNotification("Stockbit Screener", `Found ${data.GABUNGANPAGISORE} Equities for GABUNGAN PAGI SORE`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/GABUNGANPAGISORE-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
 
 test('BELI PAGI VOL BREAKOUT', async ({ browser }) => {
-  const context = await browser.newContext({
-    storageState: "./auth.json"
-  })
   const page = await context.newPage();
-  const ctxt = page.context();
-  ctxt.storageState();
-  await page.goto('https://stockbit.com/screener', { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(5000);
-  const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
-  if (await logoutBtn.isVisible({ timeout: 5000 })) {
-    execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
-    return;
+  await page.goto('chrome-extension://hlifkpholllijblknnmbfagnkjneagid/popup/popup.html');
+  await page.waitForTimeout(1000);
+  await page.goto('https://stockbit.com/login', { waitUntil: 'domcontentloaded', timeout: 10000 });
+  await page.locator('#username').fill("soegi");
+  await page.locator('#password').fill("Marvel2009");
+  await page.waitForTimeout(2000);
+  await page.locator('#email-login-button').click();
+  const continueBtn = page.locator('#email-login-button');
+  while (true) {
+    const isEnabled = await continueBtn.isEnabled();
+    if (isEnabled) {
+      await continueBtn.click();
+      await page.waitForTimeout(1000);
+      console.log('click')
+      const isVisible = await continueBtn.isVisible();
+      if (!isVisible) {
+        console.log('break')
+        break;
+      }
+    } else {
+      await page.waitForTimeout(1000);
+    }
   }
+  await page.waitForTimeout(1000);
+  try {
+    await page.locator('#modalnewavatar-button-skip').click();
+  } catch (e) {
+  }
+  await page.locator('#stockbit-header-web > div:nth-child(1) > div:nth-child(2) > div > div.sc-b2b86138-1.iTWDdJ > div:nth-child(8) > a').click();
+
   const filterLabel = page.locator('label:has-text("BELI PAGI + VOL BREAKOUT")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
   await filterLabel.click();
@@ -215,6 +337,8 @@ test('BELI PAGI VOL BREAKOUT', async ({ browser }) => {
       data.BELIPAGIVOLBREAKOUT = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGIVOLBREAKOUT} Equities for BELI PAGI + VOL BREAKOUT`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BELIPAGIVOLBREAKOUT-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -233,30 +357,52 @@ test('BELI PAGI VOL BREAKOUT', async ({ browser }) => {
         data.BELIPAGIVOLBREAKOUT = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.BELIPAGIVOLBREAKOUT} Equities for BELI PAGI + VOL BREAKOUT`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/BELIPAGIVOLBREAKOUT-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.BELIPAGIVOLBREAKOUT = 0;
       sendNotification("Stockbit Screener", `Found ${data.BELIPAGIVOLBREAKOUT} Equities for BELI PAGI + VOL BREAKOUT`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/BELIPAGIVOLBREAKOUT-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
 
 test('High Volume Breakout', async ({ browser }) => {
-  const context = await browser.newContext({
-    storageState: "./auth.json"
-  })
   const page = await context.newPage();
-  const ctxt = page.context();
-  ctxt.storageState();
-  await page.goto('https://stockbit.com/screener', { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(5000);
-  const logoutBtn = page.locator('button span:text("Kembali ke Halaman Utama")');
-  if (await logoutBtn.isVisible({ timeout: 5000 })) {
-    execSync('npx playwright codegen --save-storage=auth.json https://stockbit.com/login', { stdio: 'inherit' });
-    return;
+  await page.goto('chrome-extension://hlifkpholllijblknnmbfagnkjneagid/popup/popup.html');
+  await page.waitForTimeout(1000);
+  await page.goto('https://stockbit.com/login', { waitUntil: 'domcontentloaded', timeout: 10000 });
+  await page.locator('#username').fill("soegi");
+  await page.locator('#password').fill("Marvel2009");
+  await page.waitForTimeout(2000);
+  await page.locator('#email-login-button').click();
+  const continueBtn = page.locator('#email-login-button');
+  while (true) {
+    const isEnabled = await continueBtn.isEnabled();
+    if (isEnabled) {
+      await continueBtn.click();
+      await page.waitForTimeout(1000);
+      console.log('click')
+      const isVisible = await continueBtn.isVisible();
+      if (!isVisible) {
+        console.log('break')
+        break;
+      }
+    } else {
+      await page.waitForTimeout(1000);
+    }
   }
+  await page.waitForTimeout(1000);
+  try {
+    await page.locator('#modalnewavatar-button-skip').click();
+  } catch (e) {
+  }
+  await page.locator('#stockbit-header-web > div:nth-child(1) > div:nth-child(2) > div > div.sc-b2b86138-1.iTWDdJ > div:nth-child(8) > a').click();
+  
   const filterLabel = page.locator('label:has-text("High Volume Breakout")');
   await filterLabel.waitFor({ state: 'visible', timeout: 10000 });
   await filterLabel.click();
@@ -274,6 +420,8 @@ test('High Volume Breakout', async ({ browser }) => {
       data.HighVolumeBreakout = match ? parseInt(match[1], 10) : 0;
       sendNotification("Stockbit Screener", `Found ${data.HighVolumeBreakout} Equities for High Volume Breakout`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/HighVolumeBreakout-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   } else {
     const locator = page.locator('div.sc-c356b6c4-1.ckriEa');
@@ -292,12 +440,16 @@ test('High Volume Breakout', async ({ browser }) => {
         data.HighVolumeBreakout = match ? parseInt(match[1], 10) : 0;
         sendNotification("Stockbit Screener", `Found ${data.HighVolumeBreakout} Equities for High Volume Breakout`);
         fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+        const element = await page.$('div.sc-6f84e760-3.gXCJki');
+        await element!.screenshot({ path: `imagedata/HighVolumeBreakout-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
         throw err;
       }
     } else {
       data.HighVolumeBreakout = 0;
       sendNotification("Stockbit Screener", `Found ${data.HighVolumeBreakout} Equities for High Volume Breakout`);
       fs.writeFileSync("./count.json", JSON.stringify(data, null, 2));
+      const element = await page.$('div.sc-6f84e760-3.gXCJki');
+      await element!.screenshot({ path: `imagedata/HighVolumeBreakout-${new Date().toISOString().replace(/[:.]/g, '-')}.png` });
     }
   }
 });
